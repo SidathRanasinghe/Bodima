@@ -1,4 +1,9 @@
-enum LoginMode {
+enum AuthMode {
   Register,
   Login,
+}
+
+enum UserMode {
+  Boarder,
+  Owner,
 }

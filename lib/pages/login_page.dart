@@ -10,29 +10,63 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  LoginMode _authMode = LoginMode.Login;
+  AuthMode _authMode = AuthMode.Login;
+  UserMode _userMode = UserMode.Boarder;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final Map<String, dynamic> _formData = {
-    'user_type': "user",
+    'userType': 'boarder',
     'email': null,
-    'first_name': null,
-    'last_name': null,
+    'firstName': null,
+    'lastName': null,
     'password': null,
     'address': null,
-    'contact_num': null,
-    'resetPasswordToken': null,
-    'resetPasswordExpires': null,
-    'isActivated': true,
+    'contactNo': null,
   };
 
-//  DecorationImage _buildBackgroundImage() {
-//    return DecorationImage(
-//      fit: BoxFit.cover,
-//      // colorFilter:
-//      //     ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
-//      image: AssetImage('assets/background.jpg'),
-//    );
-//  }
+  Widget _buildUserTypeToggleButton() {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text('Please select: '),
+        SizedBox(
+          width: 10.0,
+        ),
+        RaisedButton(
+          color: _userMode == UserMode.Owner ? Colors.teal : Colors.white12,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18.0),
+          ),
+          child: Text('Owner'),
+          onPressed: () {
+            setState(() {
+              _userMode = UserMode.Owner;
+              _formData['userType'] = 'owner';
+            });
+          },
+        ),
+        SizedBox(
+          width: 10.0,
+        ),
+        RaisedButton(
+          color: _userMode == UserMode.Boarder ? Colors.teal : Colors.white12,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18.0),
+          ),
+          child: Text('Boarder'),
+          onPressed: () {
+            setState(() {
+              _userMode = UserMode.Boarder;
+              _formData['userType'] = 'boarder';
+            });
+          },
+        ),
+        Expanded(
+          child: Container(),
+        )
+      ],
+    );
+  }
 
   Widget _buildEmailTextField() {
     return TextFormField(
@@ -182,6 +216,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildRegisterFormField() {
     return Column(
       children: <Widget>[
+        _buildUserTypeToggleButton(),
         Row(
           children: <Widget>[
             Expanded(
@@ -238,7 +273,7 @@ class _LoginPageState extends State<LoginPage> {
     print(_formData);
     final successInformation = await authenticate(_formData, _authMode);
     if (successInformation['success'])
-      Navigator.pushReplacementNamed(context, '/homepage');
+      Navigator.pushReplacementNamed(context, '/wall');
     else {
       showDialog(
         context: context,
@@ -264,14 +299,14 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildLoginRegisterButton(MainModel model) {
     return RaisedButton(
       child: Text(
-        _authMode == LoginMode.Login ? 'Login' : 'Register',
+        _authMode == AuthMode.Login ? 'Login' : 'Register',
         style: TextStyle(fontSize: 18.0),
       ),
       color: Colors.amber,
       shape: RoundedRectangleBorder(
         borderRadius: new BorderRadius.circular(30.0),
       ),
-      //onPressed: () => _submitForm(model.authenticate),
+      onPressed: () => _submitForm(model.authenticate),
     );
   }
 
@@ -282,8 +317,6 @@ class _LoginPageState extends State<LoginPage> {
       child: Image.asset('assets/user.png'),
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -315,11 +348,11 @@ class _LoginPageState extends State<LoginPage> {
                                 child: GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      _authMode = LoginMode.Login;
+                                      _authMode = AuthMode.Login;
                                     });
                                   },
                                   child: Container(
-                                    color: _authMode == LoginMode.Login
+                                    color: _authMode == AuthMode.Login
                                         ? Colors.amber
                                         : Colors.black12,
                                     child: SizedBox(
@@ -327,10 +360,10 @@ class _LoginPageState extends State<LoginPage> {
                                       child: Center(
                                         child: Text(
                                           'Login',
-                                          style: _authMode ==     LoginMode.Login
+                                          style: _authMode == AuthMode.Login
                                               ? TextStyle(
-                                              fontSize: 25.0,
-                                              fontWeight: FontWeight.bold)
+                                                  fontSize: 25.0,
+                                                  fontWeight: FontWeight.bold)
                                               : TextStyle(color: Colors.black),
                                         ),
                                       ),
@@ -342,11 +375,11 @@ class _LoginPageState extends State<LoginPage> {
                                 child: GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      _authMode = LoginMode.Register;
+                                      _authMode = AuthMode.Register;
                                     });
                                   },
                                   child: Container(
-                                    color: _authMode == LoginMode.Register
+                                    color: _authMode == AuthMode.Register
                                         ? Colors.amber
                                         : Colors.black12,
                                     child: SizedBox(
@@ -354,10 +387,10 @@ class _LoginPageState extends State<LoginPage> {
                                       child: Center(
                                         child: Text(
                                           'Register',
-                                          style: _authMode == LoginMode.Register
+                                          style: _authMode == AuthMode.Register
                                               ? TextStyle(
-                                              fontSize: 25.0,
-                                              fontWeight: FontWeight.bold)
+                                                  fontSize: 25.0,
+                                                  fontWeight: FontWeight.bold)
                                               : TextStyle(color: Colors.black),
                                         ),
                                       ),
@@ -380,13 +413,13 @@ class _LoginPageState extends State<LoginPage> {
                       key: _formKey,
                       child: Column(
                         children: <Widget>[
-                          _authMode == LoginMode.Login
+                          _authMode == AuthMode.Login
                               ? _buildLoginFormField()
                               : _buildRegisterFormField(),
                           SizedBox(
                             height: 10.0,
                           ),
-                          ScopedModelDescendant(
+                          ScopedModelDescendant<MainModel>(
                             builder: (BuildContext context, Widget child,
                                 MainModel model) {
                               return model.isLoading
