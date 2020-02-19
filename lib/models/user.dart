@@ -5,7 +5,7 @@ class User {
   final String lastName;
   final String email;
   final String token;
-  final int userId;
+  final String userId;
   final String userType;
   final String address;
   final String contactNo;

@@ -128,7 +128,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     );
   }
 
-  Widget Email(MainModel model) {
+  Widget email(MainModel model) {
     return Container(
       child: Row(
         children: <Widget>[
@@ -244,7 +244,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       SizedBox(
                         height: 20.0,
                       ),
-                      Email(model),
+                      email(model),
                       SizedBox(
                         height: 30.0,
                       ),

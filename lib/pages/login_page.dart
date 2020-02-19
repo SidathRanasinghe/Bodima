@@ -273,7 +273,7 @@ class _LoginPageState extends State<LoginPage> {
     print(_formData);
     final successInformation = await authenticate(_formData, _authMode);
     if (successInformation['success'])
-      Navigator.pushReplacementNamed(context, '/wall');
+      Navigator.pushReplacementNamed(context, '/BoardingFeedPage');
     else {
       showDialog(
         context: context,
