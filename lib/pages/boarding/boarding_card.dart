@@ -12,7 +12,7 @@ class BoardingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/BoardingContent/' + boarding.boardingId);
+        Navigator.pushNamed(context, '/BoardingContent/' + boarding.boardingId); //ghsgdgshdg
       },
       child: Card(
         margin: EdgeInsets.only(top: 6.0, right: 9.0, left: 9.0, bottom: 7.0),
