@@ -29,7 +29,7 @@ Widget _buildOwnerDetailsPageBody() {
                       textAlign: TextAlign.center,
                     ),
                     Text(
-                      '${model.owner.firstName} ${model.owner.lastName}',
+                      '${model.owner.firstName} ${model.owner.lastName}',//aa
                       style: TextStyle(
                           fontSize: 22.0,
                           height: 1.3,
