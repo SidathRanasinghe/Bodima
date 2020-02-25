@@ -16,6 +16,8 @@ class BoardingEditPage extends StatefulWidget {
 
 class _BoardingEditPageState extends State<BoardingEditPage> {
   TextEditingController boardingAddressController = new TextEditingController();
+  TextEditingController boardingRentalController = new TextEditingController();
+
   TextEditingController boardingMemberCountController =
       new TextEditingController();
   TextEditingController boardingDescriptionController =
@@ -23,10 +25,11 @@ class _BoardingEditPageState extends State<BoardingEditPage> {
 
   final Map<String, dynamic> _formData = {
     'address': null,
-    'membersCount': null,
+    'memberCount': null,
     'lat': null,
     'lng': null,
     'description': null,
+    'rental': null,
     'imageUrl':
         'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
   };
@@ -63,9 +66,9 @@ class _BoardingEditPageState extends State<BoardingEditPage> {
   Widget _buildBoardingAddressFormField() {
     return TextFormField(
       controller: boardingAddressController,
+      keyboardType: TextInputType.multiline,
       textAlign: TextAlign.left,
-      maxLength: 150,
-      maxLines: null,
+      maxLines: 7,
       decoration: InputDecoration(
         fillColor: Colors.white,
         border: new OutlineInputBorder(
@@ -109,7 +112,34 @@ class _BoardingEditPageState extends State<BoardingEditPage> {
         return null;
       },
       onSaved: (String value) {
-        _formData['description'] = value;
+        _formData['memberCount'] = int.parse(value);
+      },
+    );
+  }
+
+  Widget _buildBoardingRentalFormField() {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      controller: boardingRentalController,
+      textAlign: TextAlign.center,
+      maxLines: null,
+      decoration: InputDecoration(
+        fillColor: Colors.white,
+        border: new OutlineInputBorder(
+          borderRadius: new BorderRadius.circular(25.0),
+          borderSide: new BorderSide(),
+        ),
+        filled: true,
+        hintText: 'rental per member',
+      ),
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'rental cannot be empty';
+        }
+        return null;
+      },
+      onSaved: (String value) {
+        _formData['rental'] = int.parse(value);
       },
     );
   }
@@ -117,8 +147,9 @@ class _BoardingEditPageState extends State<BoardingEditPage> {
   Widget _buildBoardingDescriptionFormField() {
     return TextFormField(
       controller: boardingDescriptionController,
+      keyboardType: TextInputType.multiline,
       textAlign: TextAlign.left,
-      maxLines: null,
+      maxLines: 7,
       decoration: InputDecoration(
         fillColor: Colors.white,
         border: new OutlineInputBorder(
@@ -157,6 +188,7 @@ class _BoardingEditPageState extends State<BoardingEditPage> {
               ]),
               SizedBox(height: 10.0),
               _buildBoardingAddressFormField(),
+              SizedBox(height: 10.0),
               Row(
                 children: <Widget>[
                   Text(
@@ -171,6 +203,23 @@ class _BoardingEditPageState extends State<BoardingEditPage> {
               ),
               SizedBox(height: 10.0),
               _buildBoardingMemberCountFormField(),
+              SizedBox(
+                height: 10.0,
+              ),
+              Row(
+                children: <Widget>[
+                  Text(
+                    'Monthly rental per one member :',
+                    style:
+                        TextStyle(fontSize: 25.0, fontWeight: FontWeight.w700),
+                  ),
+                  Expanded(
+                    child: Container(),
+                  )
+                ],
+              ),
+              SizedBox(height: 10.0),
+              _buildBoardingRentalFormField(),
               SizedBox(height: 10.0),
               Row(
                 children: <Widget>[
@@ -231,6 +280,8 @@ class _BoardingEditPageState extends State<BoardingEditPage> {
 
     if (widget._model.isEdit && widget.editableBoarding != null) {
       boardingAddressController.text = widget.editableBoarding.address;
+      boardingRentalController.text = widget.editableBoarding.rental.toString();
+
       boardingMemberCountController.text =
           widget.editableBoarding.memberCount.toString();
       boardingDescriptionController.text = widget.editableBoarding.description;

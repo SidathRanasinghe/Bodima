@@ -1,3 +1,4 @@
+import 'package:bodima/drawer/main.dart';
 import 'package:bodima/pages/boarding/boarding_card.dart';
 import 'package:bodima/scoped_models/main_scope.dart';
 import 'package:flutter/material.dart';
@@ -33,31 +34,69 @@ class _BoardingFeedPageState extends State<BoardingFeedPage> {
   }
 
   Widget _buildFloatingActionButton() {
-    return FloatingActionButton(
-      heroTag: 'blackFab',
-      onPressed: () {
-        widget._model.isEdit = false;
-        Navigator.pushNamed(context, '/BoardingEditPage');
+    return ScopedModelDescendant(
+      builder: (BuildContext context, Widget child, MainModel model) {
+        return model.user.userType == 'owner' ? FloatingActionButton(
+          heroTag: 'blackFab',
+          onPressed: () {
+            widget._model.isEdit = false;
+            Navigator.pushNamed(context, '/BoardingEditPage');
+          },
+          tooltip: 'Add a news',
+          backgroundColor: Colors.green,
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+        ): Container();
       },
-      tooltip: 'Add a news',
-      backgroundColor: Colors.black87,
-      child: Icon(
-        Icons.add,
-        color: Colors.white,
-      ),
     );
+  }
+
+  Future<bool> _willPop(BuildContext context) async {
+    if (!(Navigator.canPop(context)))
+      return showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Alert !'),
+                content: Text('Do you realy want to exit from the app ?'),
+                actions: <Widget>[
+                  FlatButton(
+                      child: Text('Yes'),
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      }),
+                  FlatButton(
+                      child: Text('No'),
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      })
+                ],
+              );
+            },
+          ) ??
+          false;
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ScopedModelDescendant<MainModel>(
-          builder: (BuildContext context, Widget child, MainModel model) {
-        return model.isLoading
-            ? Center(child: CircularProgressIndicator())
-            : _buildBoardingFeed(model);
-      }),
-      floatingActionButton: _buildFloatingActionButton(),
+    return WillPopScope(
+      onWillPop: () => _willPop(context),
+      child: Scaffold(
+        drawer: DefaultSideDrawer(),
+        body: ScopedModelDescendant<MainModel>(
+            builder: (BuildContext context, Widget child, MainModel model) {
+          return model.isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Container(
+                  height: MediaQuery.of(context).size.height,
+                  child: _buildBoardingFeed(model),
+                );
+        }),
+        floatingActionButton: _buildFloatingActionButton(),
+      ),
     );
   }
 

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:bodima/models/boarding.dart';
 import 'package:bodima/scoped_models/main_scope.dart';
 import 'package:flutter/material.dart';
@@ -23,29 +25,13 @@ class _BoardingContentPageState extends State<BoardingContentPage> {
             model.finalBoardingList.firstWhere((Boarding boarding) {
           return boarding.boardingId == widget.boardingId;
         }, orElse: () => null);
+
         return SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.only(
                 top: 30.0, left: 10.0, right: 10.0, bottom: 80.0),
             child: Column(
               children: <Widget>[
-                Text(
-                  model.selectedBoarding.boardingId ??
-                      'News Title ' + model.selectedBoarding.boardingId,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 37.0,
-                  ),
-                ),
-                Text(
-                  'by ' +
-                      model.selectedBoarding.boardingId +
-                      ' ' +
-                      model.selectedBoarding.description,
-                  style: TextStyle(fontSize: 16.0, color: Colors.black26),
-                ),
-                Divider(),
                 Row(
                   children: <Widget>[
                     Icon(
@@ -55,29 +41,16 @@ class _BoardingContentPageState extends State<BoardingContentPage> {
                     SizedBox(
                       width: 5.0,
                     ),
-//                    Text(
-//                      model.selectedNews.date,
-//                      style: TextStyle(color: Colors.black38),
-//                    ),
-//                    SizedBox(
-//                      width: 10.0,
-//                    ),
-//                    Icon(
-//                      Icons.access_time,
-//                      color: Colors.black26,
-//                    ),
-//                    SizedBox(
-//                      width: 5.0,
-//                    ),
-//                    Text(
-//                      model.selectedNews.time,
-//                      style: TextStyle(color: Colors.black38),
-//                    ),
+                    Text(
+                      model.selectedBoarding.dateAdded,
+                      style: TextStyle(color: Colors.black38, fontSize: 20.0),
+                    ),
                     Expanded(
                       child: Container(),
                     ),
                   ],
                 ),
+                Divider(),
                 SizedBox(
                   height: 8.0,
                 ),
@@ -88,8 +61,8 @@ class _BoardingContentPageState extends State<BoardingContentPage> {
                     child: Hero(
                       tag: '${model.selectedBoarding.boardingId}',
                       child: FadeInImage(
-                        image: NetworkImage(
-                            '${model.selectedBoarding.imageUrl}'),
+                        image:
+                            NetworkImage('${model.selectedBoarding.imageUrl}'),
                         fit: BoxFit.cover,
                         alignment: FractionalOffset.center,
                         placeholder: AssetImage('assets/android.jpg'),
@@ -100,11 +73,59 @@ class _BoardingContentPageState extends State<BoardingContentPage> {
                 SizedBox(
                   height: 15.0,
                 ),
-                Text(
-                  model.selectedBoarding.description ?? 'Boarding Description',
-                  style: TextStyle(
-                      fontSize: 22.0, height: 1.3, fontWeight: FontWeight.w300),
-                  textAlign: TextAlign.center,
+                Divider(
+                  thickness: 2.0,
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text(
+                      'Address: ',
+                      style: TextStyle(
+                          fontSize: 22.0,
+                          height: 1.3,
+                          fontWeight: FontWeight.w400),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      model.selectedBoarding.address ?? 'Boarding Description',
+                      style: TextStyle(
+                          fontSize: 22.0,
+                          height: 1.3,
+                          fontWeight: FontWeight.w300),
+                      textAlign: TextAlign.left,
+                    ),
+                  ],
+                ),
+                Divider(
+                  thickness: 2.0,
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text(
+                      'Description: ',
+                      style: TextStyle(
+                          fontSize: 22.0,
+                          height: 1.3,
+                          fontWeight: FontWeight.w400),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      model.selectedBoarding.description ??
+                          'Boarding Description',
+                      style: TextStyle(
+                          fontSize: 22.0,
+                          height: 1.3,
+                          fontWeight: FontWeight.w300),
+                      textAlign: TextAlign.left,
+                    ),
+                  ],
+                ),
+                Divider(
+                  thickness: 2.0,
                 ),
               ],
             ),
@@ -145,7 +166,7 @@ class _BoardingContentPageState extends State<BoardingContentPage> {
                                         model.selectedBoarding.boardingId);
 
                                     Navigator.pushReplacementNamed(
-                                        context, '/newsFeed');
+                                        context, '/BoardingFeedPage');
                                   }),
                               FlatButton(
                                   child: Text('No'),
@@ -159,6 +180,7 @@ class _BoardingContentPageState extends State<BoardingContentPage> {
                     },
                     child: Icon(
                       Icons.delete,
+                      color: Colors.white,
                     ),
                   ),
                   SizedBox(
@@ -168,15 +190,28 @@ class _BoardingContentPageState extends State<BoardingContentPage> {
                     heroTag: 'blackFab',
                     backgroundColor: Colors.black87,
                     onPressed: () {
-                      Navigator.pushNamed(context, '/NewsEditPage');
+                      model.isEdit = true;
+                      Navigator.pushNamed(context, '/BoardingEditPage');
                     },
                     child: Icon(
                       Icons.edit,
+                      color: Colors.white,
                     ),
-                  )
+                  ),
                 ],
               )
-            : Container();
+            : FloatingActionButton(
+                heroTag: 'ownerDetails',
+                backgroundColor: Colors.deepPurple,
+                onPressed: () async {
+                  await model.getOwnerDetails(model.selectedBoarding.ownerId);
+                  Navigator.pushNamed(context, '/OwnerDetailsPage');
+                },
+                child: Icon(
+                  Icons.person_outline,
+                  color: Colors.white,
+                ),
+              );
       },
     );
   }
@@ -201,6 +236,7 @@ class _BoardingContentPageState extends State<BoardingContentPage> {
   void dispose() {
     widget._model.selectedBoarding = null;
     widget._model.isEdit = false;
+    widget._model.owner = null;
     super.dispose();
   }
 

@@ -10,6 +10,7 @@ class Boarding {
   final double ltd;
   final String imageUrl;
   final String dateAdded;
+  final int rental;
 
   Boarding({
     @required this.boardingId,
@@ -21,5 +22,6 @@ class Boarding {
     @required this.ltd,
     @required this.imageUrl,
     @required this.dateAdded,
+    @required this.rental,
   });
 }

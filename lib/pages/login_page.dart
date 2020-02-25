@@ -139,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
         return null;
       },
       onSaved: (String value) {
-        _formData['first_name'] = value;
+        _formData['firstName'] = value;
       },
     );
   }
@@ -163,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
         return null;
       },
       onSaved: (String value) {
-        _formData['last_name'] = value;
+        _formData['lastName'] = value;
       },
     );
   }
@@ -208,7 +208,7 @@ class _LoginPageState extends State<LoginPage> {
       },
       keyboardType: TextInputType.number,
       onSaved: (String value) {
-        _formData['contact_num'] = value;
+        _formData['contactNo'] = value;
       },
     );
   }

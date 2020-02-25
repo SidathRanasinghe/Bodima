@@ -30,23 +30,26 @@ mixin BoardingModel on Model, UtilityScope, UserModel {
 
     final Map<String, dynamic> fetchedNews = json.decode(response.body);
     final List<Boarding> fetchedBoardingList = [];
-    fetchedNews.forEach((String boardingId, dynamic boarding) {
-      Boarding fetchedBoardingElement = Boarding(
-        boardingId: boardingId,
-        ownerId: boarding['ownerId'],
-        address: boarding['address'],
-        lng: boarding['lng'],
-        ltd: boarding['ltd'],
-        memberCount: boarding['memberCount'],
-        description: boarding['description'],
-        imageUrl: boarding['imageUrl'],
-        dateAdded: boarding['dateAdded'],
-      );
-      fetchedBoardingList.add(fetchedBoardingElement);
-    });
-    _finalBoardingList = fetchedBoardingList;
+    if (fetchedNews != null) {
+      fetchedNews.forEach((String boardingId, dynamic boarding) {
+        Boarding fetchedBoardingElement = Boarding(
+          boardingId: boardingId,
+          ownerId: boarding['ownerId'],
+          address: boarding['address'],
+          lng: boarding['lng'],
+          ltd: boarding['ltd'],
+          memberCount: boarding['memberCount'],
+          description: boarding['description'],
+          imageUrl: boarding['imageUrl'],
+          dateAdded: boarding['dateAdded'],
+          rental: boarding['rental'],
+        );
+        fetchedBoardingList.add(fetchedBoardingElement);
+      });
+      _finalBoardingList = fetchedBoardingList;
+    }
+
     print('boardings fetched');
-    notifyListeners();
     isLoading = false;
   }
 

@@ -2,6 +2,7 @@ import 'package:bodima/pages/boarding/boarding_content.dart';
 import 'package:bodima/pages/boarding/boarding_edit.dart';
 import 'package:bodima/pages/boarding/boardng_feed.dart';
 import 'package:bodima/pages/login_page.dart';
+import 'package:bodima/pages/owner_details.dart';
 import 'package:bodima/scoped_models/main_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -36,6 +37,7 @@ class _MyAppState extends State<MyApp> {
               BoardingFeedPage(_model),
           '/BoardingEditPage': (BuildContext context) =>
               BoardingEditPage(_model),
+          '/OwnerDetailsPage': (BuildContext context) => OwnerDetailsPage(),
         },
         onGenerateRoute: (RouteSettings settings) {
           final List<String> pathElements = settings.name.split('/');

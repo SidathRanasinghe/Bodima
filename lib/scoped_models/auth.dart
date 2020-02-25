@@ -11,6 +11,15 @@ import 'dart:async';
 
 mixin UserModel on Model, UtilityScope {
   User _authenticatedUser;
+  User _boardingOwner;
+
+  User get owner {
+    return _boardingOwner;
+  }
+
+  set owner(User owner) {
+    _boardingOwner = owner;
+  }
 
   User get user {
     return _authenticatedUser;
@@ -20,6 +29,26 @@ mixin UserModel on Model, UtilityScope {
 
   PublishSubject<bool> get userSubject {
     return _userSubject;
+  }
+
+  Future<Null> getOwnerDetails(String userId) async {
+    isLoading = true;
+    http.Response response = await http.get(
+      '$hostUrl/users/$userId.json',
+      headers: {'content-type': 'application/json'},
+    );
+    final Map<String, dynamic> responseData = json.decode(response.body);
+    print(responseData);
+    _boardingOwner = User(
+        firstName: responseData['firstName'],
+        email: responseData['email'],
+        lastName: responseData['lastName'],
+        token: responseData['token'],
+        userId: responseData['userId'],
+        address: responseData['address'],
+        contactNo: responseData['contactNo'],
+        userType: responseData['userType']);
+    isLoading = false;
   }
 
   Future<Map<String, dynamic>> authenticate(Map<String, dynamic> formData,

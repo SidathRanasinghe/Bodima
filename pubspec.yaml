@@ -28,6 +28,7 @@ dependencies:
   shared_preferences: ^0.5.6+1
   rxdart: ^0.23.1
   location: ^2.4.0
+  url_launcher: ^5.4.2
 
 
 dev_dependencies:
@@ -37,7 +38,7 @@ dev_dependencies:
   flutter_launcher_icons: ^0.7.4
 
 flutter_icons:
-  image_path: "assets/bodima.png"
+  image_path: "assets/bodima_flat_embosed.png"
   android: true
   ios: true
 
